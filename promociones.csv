@@ -1,0 +1,14 @@
+absoluta,AVENTURA,abs1,25,ave1,ave2,ave3
+absoluta,PAISAJE,abs2PAISAJE,5,paisaje1,paisaje2,paisaje3
+absoluta,DEGUSTACION,abs3,15,degus4,degus5
+absoluta,AVENTURA,abs4,2,ave3,ave4
+absoluta,AVENTURA,abs5,20,ave1,ave3
+absoluta,AVENTURA,abs6,25,ave1,ave2,ave5
+axb,DEGUSTACION,AxB1,10,degus1,degus2
+axb,DEGUSTACION,AxB2,12,degus1,degus2,degus3,degus4,degus5
+axb,DEGUSTACION,AxB3,15,degus1,degus3,
+axb,AVENTURA,AxB4,20,ave1,ave2,ave4
+porcentual,AVENTURA,Xciento1,20,ave1,ave2
+porcentual,PAISAJE,Xciento2PAISAJE,10,paisaje1,paisaje4,paisaje5
+porcentual,PAISAJE,Xciento3PAISAJE,5,paisaje1,paisaje2
+porcentual,PAISAJE,Xciento4PAISAJE,35,paisaje1,paisaje2,paisaje3,paisaje4,paisaje5,paisaje6

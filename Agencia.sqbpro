@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Users/Berardi/Documents/Ale/Argentina Programa/Yo Programo/AgenciaConSQL/Agencia.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="1"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1576"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,11:mainatracciones"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="atracciones" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort><column index="5" mode="1"/></sort><column_widths><column index="1" value="56"/><column index="2" value="57"/><column index="3" value="48"/><column index="4" value="40"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats><column index="1" value=""/></display_formats><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">AVENTURA	ave1	2	50	0.5
+AVENTURA	ave2	15	50	0.8
+AVENTURA	ave18	18	50	200
+AVENTURA	ave65	23	50	5
+AVENTURA	ave80	34	50	2
+AVENTURA	ave3	25	250	4
+AVENTURA	ave4	7	6	0.5
+AVENTURA	ave5	6	2	0.1
+AVENTURA	ave6	13	15	20
+DEGUSTACION	degus8	130	15	2
+DEGUSTACION	degus6	3	15	2
+DEGUSTACION	degus5	120	50	1
+DEGUSTACION	degus4	100	35	1.2
+DEGUSTACION	degus26	18	18	10
+DEGUSTACION	degus3	17	105	0.5
+DEGUSTACION	degus16	13	5	1
+DEGUSTACION	degus2	30	15	0.8
+DEGUSTACION	degus62	13	25	2.5
+DEGUSTACION	degus1	123	5	3.5
+PAISAJE	paisaje9	130	15	2
+PAISAJE	paisaje6	3	15	2
+PAISAJE	paisaje5	13	50	1
+PAISAJE	paisaje4	10	35	1.2
+PAISAJE	paisaje26	18	18	10
+PAISAJE	paisaje3	170	105	0.5
+PAISAJE	paisaje16	13	5	1
+PAISAJE	paisaje2	20	15	0.5
+PAISAJE	paisaje62	13	25	2.5
+PAISAJE	paisaje1	10	0	3.5</sql><current_tab id="0"/></tab_sql></sqlb_project>
