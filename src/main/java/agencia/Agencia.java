@@ -2,18 +2,19 @@ package agencia;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import agencia.Producto.tipoDeAtraccion;
 import agencia.Producto.tipoDeProducto;
 import dao.AtraccionDAO;
 import dao.AtraccionDAOImpl;
 import dao.DAOFactory;
 import dao.PromocionDAO;
-import dao.PromocionDAOImpl;
 import dao.UsuarioDAO;
 
 
@@ -27,7 +28,12 @@ public class Agencia {
 	private List<Promocion> listaDePromociones;
 	private PromocionDAO promocionDAO = DAOFactory.getPromocionDAO();
 	private HashMap<String, Atraccion> mapaAtraccionesPorNombre;
-	
+	public ArrayList<Promocion> listaPromocionesAventuras;
+	public ArrayList<Promocion> listaPromocionesPaisaje;
+	public ArrayList<Promocion> listaPromocionesDegustacion;
+	private ArrayList<Atraccion> mapaAtraccionesAventuras;
+	private ArrayList<Atraccion> mapaAtraccionesPaisaje;
+	private ArrayList<Atraccion> mapaAtraccionesDegustacion;
 	
 	public List<Usuario> getListaUsuarios(){
 		return this.listaDeUsuarios = usuarioDAO.findAll();
@@ -47,6 +53,314 @@ public class Agencia {
 		}
 	}
 	
+
+	// Mapas de Promociones por tipo de Atraccion Ordenadas por precio
+	public void listasDePromocionesPorTipoAtraccion() {
+
+		// Mapa de Promociones de Aventuras
+		listaPromocionesAventuras = new ArrayList<Promocion>();
+
+		for (Promocion p : listaDePromociones) {
+			if ((p.tipoDeAtraccion.name().equals("AVENTURA"))&& (p.getAtraccionesConCupo()))
+			{
+				listaPromocionesAventuras.add((Promocion) p);
+				}
+			}
+		//Ordena el Array  por precio
+		Collections.sort(this.listaPromocionesAventuras, new OrdenadorPorPrecio());
+
+		// Mapa de Promociones de Paisaje
+		listaPromocionesPaisaje = new ArrayList<Promocion>();
+
+		for (Promocion p : listaDePromociones) {
+			if ((p.tipoDeAtraccion.equals(tipoDeAtraccion.PAISAJE))
+					&& (p.getAtraccionesConCupo())	) {
+				listaPromocionesPaisaje.add((Promocion) p);
+			}
+		}
+		//Ordena el Array  por precio
+		Collections.sort(this.listaPromocionesPaisaje, new OrdenadorPorPrecio());
+
+		
+		// Mapa de Degustacion
+		listaPromocionesDegustacion = new ArrayList<Promocion>();
+
+		for (Promocion p : listaDePromociones) {
+			if (p.tipoDeAtraccion.equals(tipoDeAtraccion.DEGUSTACION)
+					&& (p.getAtraccionesConCupo())) {
+				listaPromocionesDegustacion.add((Promocion) p);
+			}
+		}
+		
+		//Ordena el Array  por precio
+		Collections.sort(this.listaPromocionesDegustacion, new OrdenadorPorPrecio());
+
+	}
+	
+	// Mapas de Atraccion Ordenadas por precio
+	public void mapasDeAtraccionPorPrecio() {
+
+		// Mapa de Aventuras
+		atraccionesAventuras();
+
+		atraccionesDegustacion();
+
+		atraccionesPaisaje();
+
+	}
+
+	private void atraccionesPaisaje() {
+		mapaAtraccionesPaisaje = new ArrayList<Atraccion>();
+
+		for (Producto p : listaDeAtracciones) {
+			if (p.tipoDeAtraccion.equals(tipoDeAtraccion.PAISAJE)) {
+				mapaAtraccionesPaisaje.add((Atraccion) p);
+			}
+		}
+		
+		//Ordena el Array  por precio
+		Collections.sort(this.mapaAtraccionesPaisaje, new OrdenadorPorPrecio());
+		
+	}
+
+	private void atraccionesDegustacion() {
+		mapaAtraccionesDegustacion = new ArrayList<Atraccion>();
+
+		for (Producto p : listaDeAtracciones) {
+			if (p.tipoDeAtraccion.equals(tipoDeAtraccion.DEGUSTACION)) {
+				mapaAtraccionesDegustacion.add((Atraccion) p);
+			}
+		}
+		//Ordena el Array  por precio
+		Collections.sort(this.mapaAtraccionesDegustacion, new OrdenadorPorPrecio());
+		
+	}
+
+	private void atraccionesAventuras() {
+		mapaAtraccionesAventuras = new ArrayList<Atraccion>();
+
+		for (Producto p : listaDeAtracciones) {
+			if (p.tipoDeAtraccion.equals(tipoDeAtraccion.AVENTURA)) {
+				mapaAtraccionesAventuras.add((Atraccion) p);
+			}
+		}
+		//Ordena el Array  por precio
+		Collections.sort(this.mapaAtraccionesAventuras, new OrdenadorPorPrecio());
+	}
+
+	//----------------------------------------------------------------------------------------
+	
+	// Filtros
+	
+	// Recorre lista usuarios
+	public void filtroSugerencias() {
+
+		this.mapaAtraccionPorNombre();
+		
+		for (Usuario u : listaDeUsuarios) {
+
+			// Por cada usuario se genera el mapa para que los cupos estén actualizados
+
+			this.listasDePromocionesPorTipoAtraccion();
+			// Primero entra en el mapa del tipo de atraccion preferida
+
+			if (u.getPreferencia().equals(tipoDeAtraccion.AVENTURA)) {
+
+				// primero ofrece las de su gusto y luego las que no coinciden
+				filtroPreferenciaAventura(u);
+				filtroAtraccionAventura(u);
+				filtroPreferenciaDegustacion(u);
+				filtroPreferenciPaisaje(u);
+				filtroAtraccionDegustacion(u);
+				filtroAtraccionPaisaje(u);
+			}
+
+			if (u.getPreferencia().equals(tipoDeAtraccion.DEGUSTACION) ) {
+
+				// primero ofrece las de su gusto y luego las que no coinciden
+				filtroPreferenciaDegustacion(u);
+				filtroAtraccionDegustacion(u);
+				filtroPreferenciPaisaje(u);
+				filtroPreferenciaAventura(u);
+				filtroAtraccionAventura(u);
+				filtroAtraccionPaisaje(u);
+			}
+
+			if (u.getPreferencia().equals(tipoDeAtraccion.PAISAJE)) {
+
+				// primero ofrece las de su gusto y luego las que no coinciden
+				filtroPreferenciPaisaje(u);
+				filtroAtraccionPaisaje(u);
+				filtroPreferenciaDegustacion(u);
+				filtroPreferenciaAventura(u);
+				filtroAtraccionAventura(u);
+				filtroAtraccionDegustacion(u);
+
+			}
+
+			System.out.println("muchas gracias " + u.getNombre() + " por tratar con nuestra agencia");
+
+		}
+
+	}
+
+	private void filtroPreferenciPaisaje(Usuario u) {
+		
+			for (Promocion cadaPromoPaisaje : listaPromocionesPaisaje) {
+
+				// comprueba que le alcanza el dinero
+				if (u.getMonedasDeOro() >= cadaPromoPaisaje.getPrecio()) {
+						// Comprueba que le alcance el tiempo
+						if (u.getTiempoDisponible() >= cadaPromoPaisaje.getTiempo()) {
+
+							// Si cumple con todo, la ofrece
+							if (this.ofertar(u, cadaPromoPaisaje)) {
+
+								// Si acepta la compra actualiza dinero y tiempo del Usuario. Guarda la compra
+								u.restarDinero((int) cadaPromoPaisaje.getPrecio());
+								u.setTiempoDisponible(cadaPromoPaisaje.getTiempo());
+								u.setSugerenciasDiarias(cadaPromoPaisaje);
+								cadaPromoPaisaje.reducirCupo();
+
+								// Actualiza el cupo de las y atracciones
+								for (Atraccion a : cadaPromoPaisaje.getAtraccionesContenidas()) {
+									a.reducirCupo();
+									
+								}
+							}
+						}
+					}
+
+				}
+
+			}
+	
+	private void filtroPreferenciaDegustacion(Usuario u) {
+	
+		for (Promocion cadaPromoDegustacion : listaPromocionesDegustacion) {
+
+			// comprueba que le alcanza el dinero
+			if (u.getMonedasDeOro() >= cadaPromoDegustacion.getPrecio()) {
+					// Comprueba que le alcance el tiempo
+					if (u.getTiempoDisponible() >= cadaPromoDegustacion.getTiempo()) {
+
+						// Si cumple con todo, la ofrece
+						if (this.ofertar(u, cadaPromoDegustacion)) {
+
+							// Si acepta la compra actualiza dinero y tiempo del Usuario. Guarda la compra
+							u.restarDinero((int) cadaPromoDegustacion.getPrecio());
+							u.setTiempoDisponible(cadaPromoDegustacion.getTiempo());
+							u.setSugerenciasDiarias(cadaPromoDegustacion);
+
+							// Actualiza el cupo de las y atracciones
+							cadaPromoDegustacion.reducirCupo();
+						}
+					}
+			}
+		}
+	}
+	private void filtroPreferenciaAventura(Usuario u) {
+		
+		for (Producto cadaPromoAventura : listaPromocionesAventuras) {
+
+			// comprueba que le alcanza el dinero
+			if (u.getMonedasDeOro() >= cadaPromoAventura.getPrecio()) {
+					// Comprueba que le alcance el tiempo
+					if (u.getTiempoDisponible() >= cadaPromoAventura.getTiempo()) {
+
+						// Si cumple con todo, la ofrece
+						if (this.ofertar(u, cadaPromoAventura)) {
+
+							// Si acepta la compra actualiza dinero y tiempo del Usuario. Guarda la compra
+							u.restarDinero((int) cadaPromoAventura.getPrecio());
+							u.setTiempoDisponible(cadaPromoAventura.getTiempo());
+							u.setSugerenciasDiarias(cadaPromoAventura);
+
+							// Actualiza el cupo de las y atracciones
+							cadaPromoAventura.reducirCupo();
+							}
+						}
+					}
+			}
+		
+	}
+	private void filtroAtraccionAventura(Usuario u) {
+
+		this.atraccionesAventuras();
+		for (Atraccion a : mapaAtraccionesAventuras) {
+
+			// comprueba que le alcanza el dinero
+			if (u.getMonedasDeOro() >= a.getPrecio() &&
+
+					u.getTiempoDisponible() >= a.getTiempo()) {
+
+				// Si cumple con todo, la ofrece
+				if (this.ofertar(u, a)) {
+
+					// Si acepta la compra actualiza dinero y tiempo del Usuario. Guarda la compra
+					u.restarDinero((int) a.getPrecio());
+					u.setTiempoDisponible(a.getTiempo());
+					u.setSugerenciasDiarias(a);
+
+					// Actualiza el cupo de las y atracciones
+					a.reducirCupo();
+
+				}
+			}
+		}
+	}
+
+	private void filtroAtraccionPaisaje(Usuario u) {
+
+		this.atraccionesPaisaje();
+		for (Atraccion a : mapaAtraccionesPaisaje) {
+
+			// comprueba que le alcanza el dinero
+			if (u.getMonedasDeOro() >= a.getPrecio() &&
+
+					u.getTiempoDisponible() >= a.getTiempo()) {
+
+				// Si cumple con todo, la ofrece
+				if (this.ofertar(u, a)) {
+
+					// Si acepta la compra actualiza dinero y tiempo del Usuario. Guarda la compra
+					u.restarDinero((int) a.getPrecio());
+					u.setTiempoDisponible(a.getTiempo());
+					u.setSugerenciasDiarias(a);
+
+					// Actualiza el cupo de las y atracciones
+					a.reducirCupo();
+
+				}
+			}
+		}
+	}
+
+	private void filtroAtraccionDegustacion(Usuario u) {
+
+		this.atraccionesDegustacion();
+		for (Atraccion a : mapaAtraccionesDegustacion) {
+
+			// comprueba que le alcanza el dinero
+			if (u.getMonedasDeOro() >= a.getPrecio() &&
+
+					u.getTiempoDisponible() >= a.getTiempo()) {
+
+// Si cumple con todo, la ofrece
+				if (this.ofertar(u, a)) {
+
+//Si acepta la compra actualiza dinero y tiempo del Usuario. Guarda la compra	
+					u.restarDinero((int) a.getPrecio());
+					u.setTiempoDisponible(a.getTiempo());
+					u.setSugerenciasDiarias(a);
+
+					// Actualiza el cupo de las y atracciones
+					a.reducirCupo();;
+
+				}
+			}
+		}
+	}
 	private void construyeLaListaDeAtraccionesContenidas() throws SQLException {
 		
 		listaDePromociones = new ArrayList <Promocion>();
@@ -74,18 +388,17 @@ public class Agencia {
 		
 	}
 
-	
 	public List<Promocion> getListaPromociones(){
 		return this.listaDePromociones ;
 	}
 	
-		
-	public void filtroSugerencias() {
+		/*
+		public void filtroSugerencias() {
 		this.getListaUsuarios();
 		for (Usuario u : listaDeUsuarios) {
 
 		// Primero entra en promociones preferida
-		/*
+	
 		 * PromocionDAOImpl promocionesDelUsuario = new PromocionDAOImpl(); ArrayList
 		 * <Promocion> listaDeLaPrimeraSeleccion = new ArrayList <Promocion>();
 		 * listaDeLaPrimeraSeleccion =
@@ -104,7 +417,7 @@ public class Agencia {
 		 * 
 		 * } promocionesDelUsuario.update(promocion); } } else {
 		 * System.out.println("No se encontraron promociones adecuadas al usuario"); }
-		 */	
+		
 		// Segundo entra en atracciones preferida	
 				AtraccionDAOImpl atraccionesDelUsuario= new AtraccionDAOImpl();
 				ArrayList <Atraccion> listaDeLaSegundaSeleccion = new ArrayList <Atraccion>();
@@ -177,7 +490,7 @@ public class Agencia {
 		System.out.println("muchas gracias " + u.getNombre() + " por tratar con nuestra agencia");
 	}
 }
-	
+	 */	
 	private boolean ofertar(Usuario u, Producto p)  {
 		@SuppressWarnings("resource")
 		Scanner teclado = new Scanner(System.in);
@@ -322,5 +635,7 @@ public void filtro2PorAtraccionesPreferidas() {
 		//System.out.println(SinCulpa.listaDeAtracciones);
 		SinCulpa.construyeLaListaDeAtraccionesContenidas();
 		//System.out.println(SinCulpa.getListaPromociones());
+		SinCulpa.mapaAtraccionPorNombre();
+		SinCulpa.filtroSugerencias();
 	}
 }
