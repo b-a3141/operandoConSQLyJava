@@ -53,7 +53,37 @@ public class Agencia {
 		}
 	}
 	
+private void construyeLaListaDeAtraccionesContenidas() throws SQLException {
+		
+		listaDePromociones = new ArrayList <Promocion>();
+		TreeMap<Integer, ArrayList<String>> map = promocionDAO.findAtraccionesContenidas();
+		ArrayList<Atraccion> contenidas; 
+		ArrayList<String> aux;
+		Promocion p = null;
+		int idAux;
+		for (Entry <Integer, ArrayList<String>> cadaPromo_id:  map.entrySet()) {
+			contenidas = new ArrayList<Atraccion>();
+			//pido la id de la promoción
+			idAux = cadaPromo_id.getKey();
+			//pido el ArrayList con los nombres de las atracciones contenidas
+			aux = cadaPromo_id.getValue();
+			//Contruto el ArrayList con las Atracciones contenidas
+			for(String nombreAtraccion : aux) {
+				Atraccion a = atraccionDAO.toAtraccionContenidaEnPromocion(nombreAtraccion);
+				contenidas.add(a);
+				}
+		//construyo la Promoción	
+		p = promocionDAO.toPromocion(idAux, contenidas);
+		System.out.println(p.toString());
+		this.listaDePromociones.add(p);
+		}	
+		
+	}
 
+	public List<Promocion> getListaPromociones(){
+		return this.listaDePromociones ;
+	}
+	
 	// Mapas de Promociones por tipo de Atraccion Ordenadas por precio
 	public void listasDePromocionesPorTipoAtraccion() {
 
@@ -361,36 +391,6 @@ public class Agencia {
 			}
 		}
 	}
-	private void construyeLaListaDeAtraccionesContenidas() throws SQLException {
-		
-		listaDePromociones = new ArrayList <Promocion>();
-		TreeMap<Integer, ArrayList<String>> map = promocionDAO.findAtraccionesContenidas();
-		ArrayList<Atraccion> contenidas; 
-		ArrayList<String> aux;
-		Promocion p = null;
-		int idAux;
-		for (Entry <Integer, ArrayList<String>> cadaPromo_id:  map.entrySet()) {
-			contenidas = new ArrayList<Atraccion>();
-			//pido la id de la promoción
-			idAux = cadaPromo_id.getKey();
-			//pido el ArrayList con los nombres de las atracciones contenidas
-			aux = cadaPromo_id.getValue();
-			//Contruto el ArrayList con las Atracciones contenidas
-			for(String nombreAtraccion : aux) {
-				Atraccion a = atraccionDAO.toAtraccionContenidaEnPromocion(nombreAtraccion);
-				contenidas.add(a);
-				}
-		//construyo la Promoción	
-		p = promocionDAO.toPromocion(idAux, contenidas);
-		System.out.println(p);
-		this.listaDePromociones.add(p);
-		}	
-		
-	}
-
-	public List<Promocion> getListaPromociones(){
-		return this.listaDePromociones ;
-	}
 	
 		/*
 		public void filtroSugerencias() {
@@ -635,7 +635,7 @@ public void filtro2PorAtraccionesPreferidas() {
 		//System.out.println(SinCulpa.listaDeAtracciones);
 		SinCulpa.construyeLaListaDeAtraccionesContenidas();
 		//System.out.println(SinCulpa.getListaPromociones());
-		SinCulpa.mapaAtraccionPorNombre();
-		SinCulpa.filtroSugerencias();
+		//SinCulpa.mapaAtraccionPorNombre();
+	//	SinCulpa.filtroSugerencias();
 	}
 }

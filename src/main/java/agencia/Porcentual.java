@@ -1,7 +1,7 @@
 package agencia;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class Porcentual extends Promocion {
 	
@@ -35,7 +35,8 @@ public class Porcentual extends Promocion {
 	public String getTipoDeAtraccionToString() {
 		return this.tipoDeAtraccion.toString();
 	}
-public void setTiempo() {
+	
+	public void setTiempo() {
 		
 		for (int i = 0; i < atraccionesContenidas.size(); i++) {
 			this.tiempo += atraccionesContenidas.get(i).getTiempo();
@@ -68,7 +69,8 @@ public void setTiempo() {
 
 	@Override
 	public String toString() {
-		String retorno = this.getNombre() + " " + this.getPrecio()+ " " + atraccionesContenidas;
+		String retorno = this.getNombre() + " con un descuento de  "+ this.descuento +" % " +
+	" Queda a "+ this.getPrecio()+ " monedas de oro, y contiene las atracciones: " + atraccionesContenidas;
 		return retorno;
 	}
 

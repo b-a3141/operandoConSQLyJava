@@ -7,6 +7,7 @@ public class Absoluta extends Promocion {
 	private int costo;
 	protected boolean atraccionConCupo;
 	private double tiempo;
+	private int descuento = 1;
 	
 	public Absoluta( tipoDeProducto tipo, 
 			tipoDeAtraccion tipoAtraccion,String nombre, int costo, ArrayList<Atraccion> lista) {
@@ -18,7 +19,7 @@ public class Absoluta extends Promocion {
 		
 	}
 	
-public void setTiempo() {
+	public void setTiempo() {
 		
 		for (int i = 0; i < atraccionesContenidas.size(); i++) {
 			this.tiempo += atraccionesContenidas.get(i).getTiempo();
@@ -52,7 +53,10 @@ public void setTiempo() {
 	
 	@Override
 	public String toString() {
-		String retorno = this.getNombre() + " " + this.getPrecio() + " " + atraccionesContenidas;
+		String retorno = this.getNombre() +  " Incluye un descuento de  "+ 
+	this.descuento  + " monedas con un precio final de "+ this.getPrecio()+
+	" monedas de oro, y contiene las atracciones: "
+				+  atraccionesContenidas;
 		return retorno;
 	}
 	

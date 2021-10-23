@@ -14,7 +14,7 @@ public class AxB extends Promocion {
 	protected boolean atraccionConCupo;
 	private int costo = 0;
 	private double tiempo;
-//	private int descuento = 0;
+	private int descuento = 1;
 	
 	public AxB(tipoDeProducto tipo, 
 			tipoDeAtraccion tipoAtraccion,
@@ -31,7 +31,6 @@ public class AxB extends Promocion {
 
 	@Override
 	public int getPrecio() {
-		
 		return costo;
 	}
 	
@@ -72,7 +71,9 @@ public class AxB extends Promocion {
 	
 	@Override
 	public String toString() {
-		String retorno = this.getNombre() + " " + this.getPrecio() + " " + atraccionesContenidas;
+		String retorno = this.getNombre() + ",  incluye "+ this.getDescuento() + 
+				" atración/es sin cargo, y cuesta " + this.getPrecio() + " monedas de oro " 
+	+ ", contiene a las atracciones: "+ atraccionesContenidas;
 		return retorno;
 	}
 	
@@ -103,8 +104,7 @@ public class AxB extends Promocion {
 
 	@Override
 	public int getDescuento() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.descuento;
 	}
 
 	
