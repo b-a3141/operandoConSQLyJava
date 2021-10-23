@@ -3,10 +3,12 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedList;
+
 import java.util.List;
+import java.util.TreeMap;
 
 import agencia.Absoluta;
 import agencia.Atraccion;
@@ -15,271 +17,264 @@ import agencia.Porcentual;
 import agencia.Producto.tipoDeAtraccion;
 import agencia.Producto.tipoDeProducto;
 import agencia.Promocion;
-import agencia.TipoDeDescuento;
 import agencia.Usuario;
 import jdbc.ConnectionProvider;
 
+public class PromocionDAOImpl implements PromocionDAO {
 
-public class PromocionDAOImpl implements PromocionDAO{
+	AtraccionDAO atraccionDAO = DAOFactory.getAtraccionDAO();
 
-	public int insert(Promocion promocion) {//throws SQLException {
-		
-		try{
-		String sql = "INSERT INTO promociones (tipoPromo, tipoAtra, nombre, descuento,"
-				+ " precio, cupo, tiempo, atr1, atr2, atr3, atr4, atr5, atr6)"
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		Connection conn = ConnectionProvider.getConnection();
+	public int insert(Promocion promocion) {// throws SQLException {
 
-		PreparedStatement statement = conn.prepareStatement(sql);
-		statement.setString (1, promocion.getTipoDePromocionToString());
-		statement.setString (2, promocion.getTipoDeAtraccionToString());
-		statement.setString(3, promocion.getNombre());
-		statement.setInt(4, promocion.getDescuento());
-		statement.setInt(5, promocion.getPrecio());
-		statement.setInt(6, promocion.getCupo());
-		statement.setDouble(7, promocion.getTiempo());
-		statement.setString (8, promocion.getAtraccionesContenidas().get(0).getNombre());
-		statement.setString (9, promocion.getAtraccionesContenidas().get(1).getNombre());
-		statement.setString (10, promocion.getAtraccionesContenidas().get(2).getNombre());
-		statement.setString (11, promocion.getAtraccionesContenidas().get(3).getNombre());
-		statement.setString (12, promocion.getAtraccionesContenidas().get(4).getNombre());
-		statement.setString (13, promocion.getAtraccionesContenidas().get(5).getNombre());
-		int rows = statement.executeUpdate();
+		try {
+			String sql = "INSERT INTO promociones (tipoPromo, tipoAtra, nombre, descuento,"
+					+ " precio, cupo, tiempo,id)" + " VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+			Connection conn = ConnectionProvider.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, promocion.getNombre());
+			ResultSet resultados = statement.executeQuery();
 
-		return rows;
+			if (resultados.next()) {
+
+			
+				statement.setString(1, promocion.getTipoDePromocionToString());
+				statement.setString(2, promocion.getTipoDeAtraccionToString());
+				statement.setString(3, promocion.getNombre());
+				statement.setInt(4, promocion.getDescuento());
+				statement.setInt(5, promocion.getPrecio());
+				statement.setInt(6, promocion.getCupo());
+				statement.setDouble(7, promocion.getTiempo());
+
+				int rows = statement.executeUpdate();
+
+				return rows;
+			} else {
+				return 0;
+			}
 		} catch (Exception e) {
-			throw new MissingDataExceptions (e);
+			throw new MissingDataExceptions(e);
 		}
 	}
 
-	public int update(Promocion promocion) { //throws SQLException {
-		
+	public int update(Promocion promocion) { // throws SQLException {
+
 		try {
-		String sql = "UPDATE promociones SET cupo = ? WHERE nombre = ?";
-		Connection conn = ConnectionProvider.getConnection();
+			String sql = "UPDATE promociones SET cupo = ? WHERE nombre = ?";
+			Connection conn = ConnectionProvider.getConnection();
 
-		PreparedStatement statement = conn.prepareStatement(sql);
-		statement.setInt(1, promocion.getCupo());
-		statement.setString(2, promocion.getNombre());
-		int rows = statement.executeUpdate();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, promocion.getCupo());
+			statement.setString(2, promocion.getNombre());
+			int rows = statement.executeUpdate();
 
-		return rows;
+			return rows;
 		} catch (Exception e) {
-			throw new MissingDataExceptions (e);
-			
+			throw new MissingDataExceptions(e);
+
 		}
 	}
 
 	public int delete(Promocion promocion) {// throws SQLException {
-		
+
 		try {
-		String sql = "DELETE FROM promociones WHERE nombre = ?";
-		Connection conn = ConnectionProvider.getConnection();
+			String sql = "DELETE FROM promociones WHERE nombre = ?";
+			Connection conn = ConnectionProvider.getConnection();
 
-		PreparedStatement statement = conn.prepareStatement(sql);
-		statement.setString(1, promocion.getNombre());
-		int rows = statement.executeUpdate();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, promocion.getNombre());
+			int rows = statement.executeUpdate();
 
-		return rows;
-		}
-		catch (Exception e) {
-			throw new MissingDataExceptions (e);
-		}
-	}
-
-	public Promocion findByPromocionName(String name) { // throws SQLException {
-		
-		try {
-		String sql = "SELECT * FROM atraccion WHERE nombre = ?";
-		Connection conn = ConnectionProvider.getConnection();
-		PreparedStatement statement = conn.prepareStatement(sql);
-		statement.setString(1, name);
-		ResultSet resultados = statement.executeQuery();
-
-		Promocion promocion = null;
-
-		if (resultados.next()) {
-			promocion = toPromocion(resultados);
-		}
-
-		return promocion;
-		}
-		catch (Exception e) {
-			throw new MissingDataExceptions (e);
+			return rows;
+		} catch (Exception e) {
+			throw new MissingDataExceptions(e);
 		}
 	}
 
 	public int countAll() { // throws SQLException {
-		
+
 		try {
-		String sql = "SELECT COUNT(1) AS TOTAL FROM promociones";
-		Connection conn = ConnectionProvider.getConnection();
-		PreparedStatement statement = conn.prepareStatement(sql);
-		ResultSet resultados = statement.executeQuery();
-
-		resultados.next();
-		int total = resultados.getInt("TOTAL");
-
-		return total;
-		}
-		catch (Exception e) {
-			throw new MissingDataExceptions (e);
-		}
-	}
-
-	public int getCantiddDeColumnasDeLaTabla() {
-		int total;
-		try {
-			String sql = "SELECT *  FROM promociones LIMIT 1";
+			String sql = "SELECT COUNT(1) AS TOTAL FROM promociones";
 			Connection conn = ConnectionProvider.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet resultados = statement.executeQuery();
 
 			resultados.next();
-			total = resultados.getInt("TOTAL");
+			int total = resultados.getInt("TOTAL");
 
-	
-			}
-			catch (Exception e) {
-				throw new MissingDataExceptions (e);
-			}
-		
-		return total;
+			return total;
+		} catch (Exception e) {
+			throw new MissingDataExceptions(e);
+		}
 	}
-	public List<Promocion> findAll() { //throws SQLException {
-		
+
+	public Promocion toPromocion(int id_promocion, ArrayList<Atraccion> atraccionesDeLaPromo) throws SQLException {
+
 		try {
-		String sql = "SELECT * FROM promociones";
-		Connection conn = ConnectionProvider.getConnection();
-		PreparedStatement statement = conn.prepareStatement(sql);
-		ResultSet resultados = statement.executeQuery();
+			String sql = "SELECT TipoPromo, TipoAtra,nombre,precio FROM promociones " +
+							"WHERE id =" + id_promocion;
+			Connection conn = ConnectionProvider.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			ResultSet resultados = statement.executeQuery();
+			try {
+				if (resultados.getString(1).compareTo("PORCENTUAL") != 0
+						&& resultados.getString(1).compareTo("ABSOLUTA") != 0
+						&& resultados.getString(1).compareTo("AxB") != 0) {
+					int x = 5;
+					int y = 0;
+					@SuppressWarnings("unused")
+					int error = x / y;
+				}
+			}
+			catch (TypePromotionError tpe) {
 
-		List<Promocion> promociones = new LinkedList<Promocion>();
-		while (resultados.next()) {
-			promociones.add(toPromocion(resultados));
-		}
+				System.out.println("Algún tipo de Promoción no es adecuado");
+			}
+			tipoDeAtraccion tipoAtraccion;
+			String paisaje = "PAISAJE";
+			String aventura = "AVENTURA";
+			if (aventura.equals(resultados.getString(2))) {
+				tipoAtraccion = tipoDeAtraccion.AVENTURA;
+			} else if (paisaje.equals(resultados.getString(2))) {
+				tipoAtraccion = tipoDeAtraccion.PAISAJE;
+			} else {
+				tipoAtraccion = tipoDeAtraccion.DEGUSTACION;
+			}
+			// Construyo el ArrayList de Atracciones contenidas
 
-		return promociones;
-		}
+			Promocion p;
+			if (resultados.getString(1).compareTo("PORCENTUAL") == 0) {
+				p = new Porcentual(tipoDeProducto.PROMOCION, tipoAtraccion, resultados.getString(3),
+						resultados.getInt(4), atraccionesDeLaPromo);
+				return p;
+			} else if (resultados.getString(1).compareTo("ABSOLUTA") == 0) {
+				p = new Absoluta(tipoDeProducto.PROMOCION, tipoAtraccion, resultados.getString(3), resultados.getInt(4),
+						atraccionesDeLaPromo);
+				return p;
+			} else {
+				return p = new AxB(tipoDeProducto.PROMOCION, tipoAtraccion, resultados.getString(3),
+						resultados.getInt(4), atraccionesDeLaPromo);
+
+			}
+
+		} 
 		catch (Exception e) {
 			throw new MissingDataExceptions (e);
 		}
 	}
 
-	private Promocion toPromocion(ResultSet resultados) throws SQLException {
-		
-		try {
-		if (resultados.getString(1).compareTo("porcentual") != 0  &&
-				resultados.getString(1).compareTo("absoluta") != 0	&&
-				resultados.getString(1).compareTo("AxB") != 0) {
-			int x= 5;
-			int y= 0;
-			@SuppressWarnings("unused")
-			int error = x/y;
-		}
-		
-		} catch (TypePromotionError tpe){ 
-			
-			System.out.println("Algún tipo de Promoción no es adecuado");
-		}
-			
-			
-		tipoDeAtraccion tipoAtraccion;
-		String paisaje = "PAISAJE";
-		String aventura = "AVENTURA";
-		if(aventura.equals(resultados.getString(2))){
-			tipoAtraccion = tipoDeAtraccion.AVENTURA;
-		} else if (paisaje.equals(resultados.getString(2))){
-			tipoAtraccion = tipoDeAtraccion.PAISAJE;
-		} else {
-			tipoAtraccion = tipoDeAtraccion.DEGUSTACION;
-		}
-		//Construyo el ArrayList de Atracciones contenidas
-		ArrayList<Atraccion> lista = new ArrayList<Atraccion>();
-		AtraccionDAO atraccionDAO = DAOFactory.getAtraccionDAO();
-	
-		for(int i =8; i<12; i++) {
-			Atraccion aux;
-			aux = atraccionDAO.findByAtraccionname(resultados.getString(i));
-			lista.add(aux);
-		}
-		
-		Promocion p;
-		if(resultados.getString(1).compareTo("porcentual") == 0) {
-			p = new Porcentual(tipoDeProducto.PROMOCION, tipoAtraccion, 
-				resultados.getString(3), resultados.getInt(4), lista );
-		return p;
-		} else if (resultados.getString(1).compareTo("absoluta") == 0) {
-			p = new Absoluta( tipoDeProducto.PROMOCION, tipoAtraccion, 
-					resultados.getString(3), resultados.getInt(4), lista );
-			return p;
-			} else {
-				return p = new AxB( tipoDeProducto.PROMOCION, tipoAtraccion, 
-						resultados.getString(3), resultados.getInt(4), lista );
-				 
-			}
-		
-		
-	}
+	/*
+	 * public ArrayList<Integer> findByIdPromocion(String id_promocion) {
+	 * 
+	 * try { String sql = "SELECT promociones.id FROM promociones "
+	 * 
+	 * + "JOIN usuarios ON " + "usuarios.TipoAtraccion = promociones.TipoAtra " +
+	 * " WHERE ('"+ usuario.getNombre()
+	 * +"' = usuarios.nombre AND promociones.cupo > 0 " +
+	 * "AND usuarios.monedas >= promociones.precio " +
+	 * "AND usuarios.tiempo >= promociones.tiempo) " + "	ORDER BY precio DESC" ;
+	 * Connection conn = ConnectionProvider.getConnection(); PreparedStatement
+	 * statement = conn.prepareStatement(sql); ResultSet resultados =
+	 * statement.executeQuery();
+	 * 
+	 * if (resultados.next()) { //Stores properties of a ResultSet object, including
+	 * column count ResultSetMetaData rsmd = resultados.getMetaData(); int
+	 * columnCount = rsmd.getColumnCount(); int i = 1; while( i <= columnCount) {
+	 * listaSeleccionadaAlUsuaio.add(resultados.getInt(i++)); } } return
+	 * listaSeleccionadaAlUsuaio; } catch (Exception e) { throw new
+	 * MissingDataExceptions (e); }
+	} */
 
-	public ArrayList<Promocion> findByPreferenciasUsuario(Usuario usuario) {
-		
-		ArrayList<Promocion> listaSeleccionadaAlUsuaio = new ArrayList<Promocion>();
+	// Array con los id de las promociones seleccionadas para el usuario
+	// Luego lo recorro para generar las atracciones contenidas en cada una
+	// En toAtraccionContenidaEnPromocion() de AtraccionDAO
+	public ArrayList<Integer> findByPreferenciasUsuario(Usuario usuario) {
+
+		ArrayList<Integer> listaSeleccionadaAlUsuaio = new ArrayList<Integer>();
 		try {
-			String sql = "SELECT * FROM promociones WHERE "
-					+ "(tipoAtra = ? AND cupo > 0 AND precio >= ? AND tiempo >= ?) "
-					+ "ORDER BY precio DESC;";
+			String sql = "SELECT promociones.id FROM promociones " + "JOIN usuarios ON "
+					+ "usuarios.TipoAtraccion = promociones.TipoAtra " + " WHERE ('" + usuario.getNombre()
+					+ "' = usuarios.nombre AND promociones.cupo > 0 " + "AND usuarios.monedas >= promociones.precio "
+					+ "AND usuarios.tiempo >= promociones.tiempo) " + "	ORDER BY precio DESC";
 			Connection conn = ConnectionProvider.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, usuario.getPreferencia().toString());
-			statement.setInt(2, usuario.getMonedasDeOro());
-			statement.setDouble(3, usuario.getTiempoDisponible());
 			ResultSet resultados = statement.executeQuery();
 
-			Promocion promocion = null;
-
 			if (resultados.next()) {
-				promocion = toPromocion(resultados);
+				// Stores properties of a ResultSet object, including column count
+				ResultSetMetaData rsmd = resultados.getMetaData();
+				int columnCount = rsmd.getColumnCount();
+				int i = 1;
+				while (i <= columnCount) {
+					listaSeleccionadaAlUsuaio.add(resultados.getInt(i++));
+				}
 			}
-			
-			listaSeleccionadaAlUsuaio.add(promocion);
-			
 			return listaSeleccionadaAlUsuaio;
-			}
-			catch (Exception e) {
-				throw new MissingDataExceptions (e);
-			}
+		} catch (Exception e) {
+			throw new MissingDataExceptions(e);
+		}
 	}
 
+	public TreeMap<Integer, ArrayList<String>> findAtraccionesContenidas() {
 
-public ArrayList<Promocion> findByNotPreferenciasUsuario(Usuario usuario) {
-		
-		ArrayList<Promocion> listaSinPreferencia = new ArrayList<Promocion>();
+		TreeMap<Integer, ArrayList<String>> promocionesYatracciones = new TreeMap<Integer, ArrayList<String>>();
+		ArrayList<String> aux;
 		try {
-			String sql = "SELECT * FROM promociones WHERE "
-					+ "(cupo > 0 AND precio >= ? AND tiempo >= ?) "
-					+ "ORDER BY precio DESC;";
+			String sql = "SELECT atraccionesContenidasEnPromociones.id_promocion, atracciones.nombre "
+					+ " FROM atraccionesContenidasEnPromociones  " + "JOIN atracciones ON "
+					+ "atraccionesContenidasEnPromociones.id_atraacion = atracciones.id  "
+					+ "	ORDER BY atraccionesContenidasEnPromociones.id_promocion";
 			Connection conn = ConnectionProvider.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
-		
-			statement.setInt(1, usuario.getMonedasDeOro());
-			statement.setDouble(2, usuario.getTiempoDisponible());
 			ResultSet resultados = statement.executeQuery();
 
-			Promocion promocion = null;
-
-			if (resultados.next()) {
-				promocion = toPromocion(resultados);
+			while (resultados.next()) {
+				int Key = resultados.getInt(1);
+				if (!promocionesYatracciones.containsKey(Key)) {
+					aux = new ArrayList<String>();
+					aux.add(resultados.getString(2));
+					promocionesYatracciones.put(Key, aux);
+				} else {
+					aux = promocionesYatracciones.get(Key);
+					aux.add(resultados.getString(2));
+					promocionesYatracciones.put(Key, aux);
+				}
 			}
-			
-			listaSinPreferencia.add(promocion);
-			
-			return listaSinPreferencia;
-			}
-			catch (Exception e) {
-				throw new MissingDataExceptions (e);
-			}
+			return promocionesYatracciones;
+		} catch (Exception e) {
+			throw new MissingDataExceptions(e);
+		}
 	}
 
-	
+	public List<Promocion> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Promocion findByPromocionName(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	 * public ArrayList<Promocion> findByNotPreferenciasUsuario(Usuario usuario) {
+	 * 
+	 * ArrayList<Promocion> listaSinPreferencia = new ArrayList<Promocion>(); try {
+	 * String sql = "SELECT * FROM promociones WHERE " +
+	 * "(cupo > 0 AND precio >= ? AND tiempo >= ?) " + "ORDER BY precio DESC;";
+	 * Connection conn = ConnectionProvider.getConnection(); PreparedStatement
+	 * statement = conn.prepareStatement(sql);
+	 * 
+	 * statement.setInt(1, usuario.getMonedasDeOro()); statement.setDouble(2,
+	 * usuario.getTiempoDisponible()); ResultSet resultados =
+	 * statement.executeQuery();
+	 * 
+	 * Promocion promocion = null;
+	 * 
+	 * if (resultados.next()) { promocion = toPromocion(resultados); }
+	 * 
+	 * listaSinPreferencia.add(promocion);
+	 * 
+	 * return listaSinPreferencia; } catch (Exception e) { throw new
+	 * MissingDataExceptions (e); } }
+	 */
 }

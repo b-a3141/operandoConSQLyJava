@@ -3,9 +3,13 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import agencia.Atraccion;
 import agencia.Producto;
 import agencia.Usuario;
 import agencia.Producto.tipoDeAtraccion;
@@ -20,12 +24,12 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 			PreparedStatement statement = conn.prepareStatement(sql);
 			ResultSet resultados = statement.executeQuery();
 
-			List<Usuario> atracciones = new LinkedList<Usuario>();
+			List<Usuario> listaDeTodosLosUsuarios = new LinkedList<Usuario>();
 			while (resultados.next()) {
-				atracciones.add(toUsuario(resultados));
+				listaDeTodosLosUsuarios.add(toUsuario(resultados));
 			}
 
-			return atracciones;
+			return listaDeTodosLosUsuarios;
 			}
 			catch (Exception e) {
 				throw new MissingDataExceptions (e);
@@ -66,8 +70,35 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 				throw new MissingDataExceptions (e);
 			}
 	}
+	
+	public Usuario findByUsuarioName(String Name) { // throws SQLException {
+		
+		try {
+		String sql = "SELECT * FROM usuarios WHERE nombre = ?";
+		Connection conn = ConnectionProvider.getConnection();
+		PreparedStatement statement = conn.prepareStatement(sql);
+		
+		statement.setString(1, Name);
+		ResultSet resultados = statement.executeQuery();
+
+		Usuario usuario = null;
+
+		if (resultados.next()) {
+			usuario = toUsuario(resultados);
+		}
+
+		return usuario;
+		}
+		catch (Exception e) {
+			throw new MissingDataExceptions (e);
+		}
+	}
 
 	public int insert(Usuario usuario) {
+		
+		if(findByUsuarioName(usuario.getNombre()) == null) {
+			
+		
 		try{
 			String sql = "INSERT INTO usuarios (nombre, monedas, tiempo, TipoAtraccion)"
 					+ " VALUES (?, ?, ?, ?)";
@@ -83,14 +114,19 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 			int rows = statement.executeUpdate();
 
 			return rows;
-			} catch (Exception e) {
+			} 
+			catch (Exception e) {
 				throw new MissingDataExceptions (e);
 			}
+		} else {
+			System.out.println("El usuario " + usuario.getNombre() +", ya existe");
+			return 0;
+		}
 	}
 
 	public int delete(Usuario usuario) {
 		try {
-			String sql = "DELETE FROM usuario WHERE nombre = ?";
+			String sql = "DELETE FROM usuarios WHERE nombre = ?";
 			Connection conn = ConnectionProvider.getConnection();
 
 			PreparedStatement statement = conn.prepareStatement(sql);
@@ -104,7 +140,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 			}
 	}
 
-	public int updateTiempoYDinero(Usuario usuario, Producto productoAdquirido) {
+	public int updateRestaTiempoYDineroPorLaCompra(Usuario usuario, Producto productoAdquirido) {
 
 		int monedasDisponibles = usuario.getMonedasDeOro()-productoAdquirido.getPrecio();
 		double tiempoDisponible = usuario.getTiempoDisponible() - productoAdquirido.getTiempo();
@@ -124,6 +160,26 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 			}
 	}
 
+	public int cargaTiempoYDinero(Usuario usuario, double tiempo, int dinero) {
+
+		int monedasDisponibles = usuario.getMonedasDeOro()+dinero;
+		double tiempoDisponible = usuario.getTiempoDisponible() + tiempo;
+		try {
+			String sql = "UPDATE usuarios SET monedas = ? AND tiempo = ? WHERE nombre = ?";
+			Connection conn = ConnectionProvider.getConnection();
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, monedasDisponibles);
+			statement.setDouble(2, tiempoDisponible);
+			statement.setString(3, usuario.getNombre());
+			int rows = statement.executeUpdate();
+
+			return rows;
+			} catch (Exception e) {
+				throw new MissingDataExceptions (e);
+				
+			}
+	}
+	
 	public int update(Usuario usuario) {
 
 		try {
@@ -157,5 +213,10 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 			}*/
 		return 0;
 	}
+
+
+
+
+	
 
 }

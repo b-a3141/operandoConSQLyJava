@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Objects;
 
 public abstract  class Producto  implements Comparable<Producto>{
-	protected tipoDeProducto tipoDeProducto;
-	protected tipoDeAtraccion tipoDeAtraccion;
+	 tipoDeProducto tipoDeProducto;
+	 tipoDeAtraccion tipoDeAtraccion;
 	
 	public enum tipoDeProducto{
 		ATRACCION,PROMOCION
@@ -16,8 +16,7 @@ public abstract  class Producto  implements Comparable<Producto>{
 	}
 	
 	public String tipoDeAtracciontoString(tipoDeAtraccion tipoAtr) {
-		
-		return tipoAtr.toString() ;
+			return tipoAtr.toString() ;
 	}
 	
 	
@@ -56,7 +55,7 @@ public abstract  class Producto  implements Comparable<Producto>{
 	//Funciones que van a poder usar clases hijas//
 	public int getCupo() {return 0;}
 	
-	public void reducirCupo() {};
+	public abstract void reducirCupo();
 	
 	public String getNombre() {return null;}
 	

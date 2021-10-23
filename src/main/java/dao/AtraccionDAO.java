@@ -11,4 +11,5 @@ public interface AtraccionDAO extends GenericDAO<Atraccion>{
 	//Métodos específicos para Atracciones 
 	public abstract Atraccion findByAtraccionname(String name); //throws SQLException;
 	public abstract ArrayList<Atraccion> findByPreferenciasUsuario(Usuario usuario);
+	public abstract Atraccion  toAtraccionContenidaEnPromocion(String nombreAtraccion);
 }

@@ -5,7 +5,7 @@ import java.util.*;
 
 public abstract class Promocion extends Producto {
 	
-	List<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
+	ArrayList<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
 	String nombre;
 	
 	public Promocion(tipoDeProducto tipo, tipoDeAtraccion tipoAtraccion,String nombre) {
@@ -17,15 +17,16 @@ public abstract class Promocion extends Producto {
 	public abstract String getTipoDeAtraccionToString();
 	public abstract int getDescuento();
 		
-	public List<Atraccion> getAtraccionesContenidas() {
+	public ArrayList<Atraccion> getAtraccionesContenidas() {
 		return atraccionesContenidas;
 	}
 	
-	public List<Atraccion> setAtraccionesContenidas(Atraccion a) {
+	public ArrayList<Atraccion> setAtraccionesContenidas(Atraccion a) {
 		this.atraccionesContenidas.add(a);
 		return  this.atraccionesContenidas;
 	}
 	
+	public abstract int calculaPrecio() ;
 
 	
 	@Override
@@ -48,13 +49,16 @@ public abstract class Promocion extends Producto {
 	}
 	@Override
 	public int getCupo() {
-		
-		
-		int noNulo = 1;
+	
+		int contador = 0;
 		for(Atraccion a: atraccionesContenidas) {
-			noNulo  *= 	a.getCupo();
+			if(a.getCupo() <= 0) {
+				contador = contador * 0;
+			} else {
+				contador =+ a.getCupo();
+			}
 		}
-		return noNulo;
+		return contador;
 	}
 		
 	@Override

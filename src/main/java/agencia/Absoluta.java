@@ -3,13 +3,13 @@ import java.util.ArrayList;
 import java.util.List;
 public class Absoluta extends Promocion {
 	
-	List<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
+	ArrayList<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
 	private int costo;
 	protected boolean atraccionConCupo;
 	private double tiempo;
 	
 	public Absoluta( tipoDeProducto tipo, 
-			tipoDeAtraccion tipoAtraccion,String nombre, int costo, List<Atraccion> lista) {
+			tipoDeAtraccion tipoAtraccion,String nombre, int costo, ArrayList<Atraccion> lista) {
 		super(tipo, tipoAtraccion,nombre);
 		this.costo = costo;
 		atraccionesContenidas.addAll( lista);
@@ -56,8 +56,8 @@ public void setTiempo() {
 		return retorno;
 	}
 	
-	
-	public void reducirCupoPromocion() {
+	@Override
+	public void reducirCupo() {
 		
 		for (int i = 0; i < atraccionesContenidas.size(); i++) {
 			atraccionesContenidas.get(i).reducirCupo();
@@ -96,4 +96,16 @@ public void setTiempo() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public int calculaPrecio() {
+		
+		int sumaSinDescuento = 0;
+		for(Atraccion a: this.atraccionesContenidas) {
+			sumaSinDescuento =+ a.getPrecio();
+		}
+		return (sumaSinDescuento - this.costo );
+	}
+	
+	
 	}

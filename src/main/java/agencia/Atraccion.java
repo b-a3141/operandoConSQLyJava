@@ -49,20 +49,22 @@ public class Atraccion extends Producto {
 	}
 
 	
-	
 	public void setPrecio(int precio) {
 		this.precio = precio;
 	}
+	
+	
+	public void setCupo(int cupo) {
+		this.cupo = cupo;
+	}
+	
 	
 	@Override
 	public int getCupo() {
 		return cupo;
 	}
 
-		
-	public void setCupo(int cupo) {
-		this.cupo = cupo;
-	}
+	
 
 	public int getCupoDisponible() {
 		return cupoDisponible;

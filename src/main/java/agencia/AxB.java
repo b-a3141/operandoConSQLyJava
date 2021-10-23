@@ -5,7 +5,7 @@ import java.util.*;
 
 public class AxB extends Promocion {
 
-	List<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
+	ArrayList<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
 	
 	public boolean isAtraccionConCupo() {
 		return atraccionConCupo;
@@ -14,13 +14,13 @@ public class AxB extends Promocion {
 	protected boolean atraccionConCupo;
 	private int costo = 0;
 	private double tiempo;
-	private int descuento = 0;
+//	private int descuento = 0;
 	
 	public AxB(tipoDeProducto tipo, 
 			tipoDeAtraccion tipoAtraccion,
 			String nombre,
 			int costo, 
-			List<Atraccion> lista) {
+			ArrayList<Atraccion> lista) {
 		super(tipo, tipoAtraccion,nombre);
 		atraccionesContenidas.addAll(lista);
 		this.setTiempo();
@@ -59,7 +59,8 @@ public class AxB extends Promocion {
 		atraccionesContenidas.addAll(lista);
 	}
 	
-	public void reducirCupoPromocion() {
+	@Override
+	public void reducirCupo() {
 		
 		for (int i = 0; i < atraccionesContenidas.size(); i++) {
 			atraccionesContenidas.get(i).reducirCupo();
@@ -105,6 +106,23 @@ public class AxB extends Promocion {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	
+	@Override
+	public int calculaPrecio() {
+		
+		int sumaSinDescuento = 0;
+		int cantidadAtraccionesConCargo = this.atraccionesContenidas.size()-this.costo;
+		for(Atraccion a: this.atraccionesContenidas) {
+			if (cantidadAtraccionesConCargo > 0){
+				cantidadAtraccionesConCargo --;
+				sumaSinDescuento =+ a.getPrecio();
+			}
+		}
+		return (sumaSinDescuento );
+	}
+
+	
 
 	
 }

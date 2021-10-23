@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Porcentual extends Promocion {
 	
-	List<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
+	ArrayList<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
 	protected boolean atraccionConCupo;
 	private double interesDeLaoferta;
 	private double tiempo;
@@ -21,6 +21,11 @@ public class Porcentual extends Promocion {
 		this.setTiempo();
 		this.setAtraccionConCupo();
 		
+	}
+	
+	public ArrayList<Atraccion> setAtraccionesContenidas(Atraccion a) {
+		this.atraccionesContenidas.add(a);
+		return  this.atraccionesContenidas;
 	}
 	
 	public String getTipoDePromocionToString() {
@@ -76,7 +81,6 @@ public void setTiempo() {
 	}
 	
 	
-	
 	public void setAtraccionConCupo() {
 		int contador = 0;
 		for (int i=0; i < atraccionesContenidas.size();i++) {
@@ -86,7 +90,7 @@ public void setTiempo() {
 	}
 	
 	
-	public void reducirCupoPromocion() {
+	public void reducirCupo() {
 		
 		for (int i = 0; i < atraccionesContenidas.size(); i++) {
 			atraccionesContenidas.get(i).reducirCupo();
@@ -100,6 +104,18 @@ public void setTiempo() {
 	public boolean getAtraccionesConCupo() {
 		return this.atraccionConCupo;
 	}
+
+
+	@Override
+	public int calculaPrecio() {
+			int sumaSinDescuento = 0;
+			for(Atraccion a: this.atraccionesContenidas) {
+				sumaSinDescuento =+ a.getPrecio();
+			}
+			
+			return (sumaSinDescuento * (100- this.descuento)/100 %10);
+		}
+	
 	
 	
 	
