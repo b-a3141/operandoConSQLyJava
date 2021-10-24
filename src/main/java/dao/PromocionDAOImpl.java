@@ -110,7 +110,7 @@ public class PromocionDAOImpl implements PromocionDAO {
 	public Promocion toPromocion(int id_promocion, ArrayList<Atraccion> atraccionesDeLaPromo) throws SQLException {
 
 		try {
-			String sql = "SELECT TipoPromo, TipoAtra,nombre,precio FROM promociones " +
+			String sql = "SELECT TipoPromo, TipoAtra,nombre,descuento FROM promociones " +
 							"WHERE id =" + id_promocion;
 			Connection conn = ConnectionProvider.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);

@@ -7,6 +7,7 @@ import dao.AtraccionDAO;
 import dao.DAOFactory;
 import dao.UsuarioDAO;
 
+@SuppressWarnings("unused")
 public class UsuarioDAOTest {
 	UsuarioDAO usuarioDAO = DAOFactory.getUsuarioDAO();
 	AtraccionDAO atraccionDAO = DAOFactory.getAtraccionDAO();

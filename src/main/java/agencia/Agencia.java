@@ -53,7 +53,7 @@ public class Agencia {
 		}
 	}
 	
-private void construyeLaListaDeAtraccionesContenidas() throws SQLException {
+	public void construyeLaListaDeAtraccionesContenidas() throws SQLException {
 		
 		listaDePromociones = new ArrayList <Promocion>();
 		TreeMap<Integer, ArrayList<String>> map = promocionDAO.findAtraccionesContenidas();
@@ -74,7 +74,6 @@ private void construyeLaListaDeAtraccionesContenidas() throws SQLException {
 				}
 		//construyo la Promoción	
 		p = promocionDAO.toPromocion(idAux, contenidas);
-		System.out.println(p.toString());
 		this.listaDePromociones.add(p);
 		}	
 		
@@ -636,6 +635,6 @@ public void filtro2PorAtraccionesPreferidas() {
 		SinCulpa.construyeLaListaDeAtraccionesContenidas();
 		//System.out.println(SinCulpa.getListaPromociones());
 		//SinCulpa.mapaAtraccionPorNombre();
-	//	SinCulpa.filtroSugerencias();
+	SinCulpa.filtroSugerencias();
 	}
 }

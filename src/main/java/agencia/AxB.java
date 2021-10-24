@@ -6,42 +6,63 @@ import java.util.*;
 public class AxB extends Promocion {
 
 	ArrayList<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
+	protected boolean atraccionConCupo;
+	private double tiempo;
+	private int descuento ;
+	private int precio;
+	
+	public AxB(tipoDeProducto tipo, tipoDeAtraccion tipoAtraccion,
+			String nombre, int descuento, ArrayList<Atraccion> lista) {
+		super(tipo, tipoAtraccion,nombre);
+		this.atraccionesContenidas = lista;
+		this.descuento = descuento;
+		this.setTiempo();
+		this.setPrecio();
+		this.setAtraccionConCupo();
+	}
 	
 	public boolean isAtraccionConCupo() {
 		return atraccionConCupo;
 	}
 
-	protected boolean atraccionConCupo;
-	private int costo = 0;
-	private double tiempo;
-	private int descuento = 1;
-	
-	public AxB(tipoDeProducto tipo, 
-			tipoDeAtraccion tipoAtraccion,
-			String nombre,
-			int costo, 
-			ArrayList<Atraccion> lista) {
-		super(tipo, tipoAtraccion,nombre);
-		atraccionesContenidas.addAll(lista);
-		this.setTiempo();
-		this.setPrecio();
-		this.setAtraccionConCupo();
-		
+	public ArrayList<Atraccion> getAtraccionesContenidas(){
+		return this.atraccionesContenidas;
 	}
-
+	
+	//-----------------------------------------------------
+	//Cálculo de costo, descuento y precio final
+	
 	@Override
 	public int getPrecio() {
-		return costo;
+		setPrecio();
+		return this.precio;
 	}
 	
 	public void setPrecio() {
-		int acumulado = 0;
-		for (int i = 0; i < atraccionesContenidas.size()-1; i++) {
-			acumulado += atraccionesContenidas.get(i).getPrecio();
+		this.precio = calculaPrecioSinDescuento() ;
+		int cantidadDeAtracciones = this.atraccionesContenidas.size();
+		if (this.descuento < cantidadDeAtracciones) {
+			for( int i = 0; i < descuento ; i++) {
+				System.out.println(this.atraccionesContenidas.get(i).getPrecio());
+				this.precio -= this.atraccionesContenidas.get(i).getPrecio();
+			}
 		}
-		this.costo = acumulado;
 	}
 	
+	@Override
+	public int calculaPrecioSinDescuento() {
+		int acumulado = 0;
+		for (Atraccion a: this.atraccionesContenidas) {
+			acumulado += a.getPrecio();
+		}
+		return acumulado;
+	}
+	
+	@Override
+	public int getDescuento() {
+		return this.descuento;
+	}
+	  
 	public void setTiempo() {
 		
 		for (int i = 0; i < atraccionesContenidas.size(); i++) {
@@ -72,8 +93,8 @@ public class AxB extends Promocion {
 	@Override
 	public String toString() {
 		String retorno = this.getNombre() + ",  incluye "+ this.getDescuento() + 
-				" atración/es sin cargo, y cuesta " + this.getPrecio() + " monedas de oro " 
-	+ ", contiene a las atracciones: "+ atraccionesContenidas;
+				" atración/es sin cargo, " +"\n"  + " y cuesta: " + this.getPrecio() + " monedas de oro " 
+	+ ", contiene a las atracciones: "+  "\n" + atraccionesContenidas;
 		return retorno;
 	}
 	
@@ -89,7 +110,7 @@ public class AxB extends Promocion {
 	public boolean getAtraccionesConCupo() {
 		return this.atraccionConCupo;
 	}
-
+	
 	@Override
 	public String getTipoDePromocionToString() {
 		// TODO Auto-generated method stub
@@ -102,27 +123,13 @@ public class AxB extends Promocion {
 		return null;
 	}
 
-	@Override
-	public int getDescuento() {
-		return this.descuento;
-	}
 
-	
-	@Override
-	public int calculaPrecio() {
-		
-		int sumaSinDescuento = 0;
-		int cantidadAtraccionesConCargo = this.atraccionesContenidas.size()-this.costo;
-		for(Atraccion a: this.atraccionesContenidas) {
-			if (cantidadAtraccionesConCargo > 0){
-				cantidadAtraccionesConCargo --;
-				sumaSinDescuento =+ a.getPrecio();
-			}
-		}
-		return (sumaSinDescuento );
-	}
-
-	
-
-	
+	  public static void main(String[] args) {
+	  
+	 
+	 // AxB aPorB = new AxB(tipoDeProducto, tipoDeAtraccion, nombre, costo,
+	 // atraccionesContenidas); }
+	 
+	  }
 }
+	  

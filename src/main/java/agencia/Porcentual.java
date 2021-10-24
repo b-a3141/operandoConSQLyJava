@@ -7,22 +7,26 @@ public class Porcentual extends Promocion {
 	
 	ArrayList<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
 	protected boolean atraccionConCupo;
-	private double interesDeLaoferta;
+	private double reduccionDeLaoferta;
 	private double tiempo;
 	private int descuento;
+	private int precio;
 	
 
-	public Porcentual(  tipoDeProducto tipo, tipoDeAtraccion tipoAtraccion,String nombre,
-			 int descuento, ArrayList<Atraccion> lista) {
+	public Porcentual(  tipoDeProducto tipo, tipoDeAtraccion tipoAtraccion,
+			String nombre, int descuento, ArrayList<Atraccion> lista) {
 		super(tipo, tipoAtraccion,nombre);
 		this.descuento = descuento;
 		this.atraccionesContenidas = lista;
-		this.interesDeLaoferta = descuento/100;
+		this.reduccionDeLaoferta = descuento/100;
 		this.setTiempo();
 		this.setAtraccionConCupo();
 		
 	}
 	
+	public ArrayList<Atraccion> getAtraccionesContenidas(){
+		return this.atraccionesContenidas;
+	}
 	public ArrayList<Atraccion> setAtraccionesContenidas(Atraccion a) {
 		this.atraccionesContenidas.add(a);
 		return  this.atraccionesContenidas;
@@ -52,16 +56,29 @@ public class Porcentual extends Promocion {
 		return this.descuento;
 	}
 	
+	@Override
+	public int calculaPrecioSinDescuento() {
+		int acumulado = 0;
+		for (Atraccion a: this.atraccionesContenidas) {
+			acumulado += a.getPrecio();
+		}
+		return acumulado;
+	}
+	
+	
+	public void setPrecio() {
+		double valorCalculado = ( calculaPrecioSinDescuento() * (100-this.descuento)/100);
+		double parteDecimal = ( calculaPrecioSinDescuento() * ((100-this.descuento)/100))%1;
+		double parteEntera = valorCalculado - parteDecimal;
+		this.precio = (int) parteEntera;
+	}
 	
 	@Override
 	public int getPrecio() {
-		int costo = 0;
-		for (int i = 0; i < atraccionesContenidas.size(); i++) {
-			costo += atraccionesContenidas.get(i).getPrecio();
+		setPrecio();
+			return this.precio;
 		}
-		costo = (int) costo * ((100-this.descuento)/100);
-		return costo;
-	}
+
 	
 	//Getters and setters
 	
@@ -69,8 +86,9 @@ public class Porcentual extends Promocion {
 
 	@Override
 	public String toString() {
-		String retorno = this.getNombre() + " con un descuento de  "+ this.descuento +" % " +
-	" Queda a "+ this.getPrecio()+ " monedas de oro, y contiene las atracciones: " + atraccionesContenidas;
+		String retorno = this.getNombre() + " con un descuento de  "+ this.descuento +" % " + "\n" +
+	" Queda a "+ this.getPrecio()+ " monedas de oro, y contiene las atracciones: " +  "\n" +
+				atraccionesContenidas;
 		return retorno;
 	}
 
@@ -78,10 +96,6 @@ public class Porcentual extends Promocion {
 		this.atraccionesContenidas = atraccionesContenidas;
 	}
 
-	public double getInteresDeLaoferta() {
-		return interesDeLaoferta;
-	}
-	
 	
 	public void setAtraccionConCupo() {
 		int contador = 0;
@@ -108,17 +122,5 @@ public class Porcentual extends Promocion {
 	}
 
 
-	@Override
-	public int calculaPrecio() {
-			int sumaSinDescuento = 0;
-			for(Atraccion a: this.atraccionesContenidas) {
-				sumaSinDescuento =+ a.getPrecio();
-			}
-			
-			return (sumaSinDescuento * (100- this.descuento)/100 %10);
-		}
-	
-	
-	
 	
 }

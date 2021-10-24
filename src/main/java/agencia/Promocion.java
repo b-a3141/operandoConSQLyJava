@@ -16,7 +16,7 @@ public abstract class Promocion extends Producto {
 	public abstract String getTipoDePromocionToString();
 	public abstract String getTipoDeAtraccionToString();
 	public abstract int getDescuento();
-		
+	
 	public ArrayList<Atraccion> getAtraccionesContenidas() {
 		return atraccionesContenidas;
 	}
@@ -26,9 +26,8 @@ public abstract class Promocion extends Producto {
 		return  this.atraccionesContenidas;
 	}
 	
-	public abstract int calculaPrecio() ;
+	public abstract int calculaPrecioSinDescuento() ;
 
-	
 	@Override
 	public String getNombre() {
 		return nombre;
@@ -62,15 +61,9 @@ public abstract class Promocion extends Producto {
 	}
 		
 	@Override
-	public int getPrecio() {
-	
-		return 0;
-	}
+	public abstract int getPrecio();
 	
 	public boolean getAtraccionesConCupo() { return false;
 	}
-	
-	
-	
 	
 }

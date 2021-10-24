@@ -45,7 +45,7 @@ public class Atraccion extends Producto {
 	}
 
 	public int getPrecio() {
-		return precio;
+		return this.precio;
 	}
 
 	

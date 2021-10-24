@@ -11,15 +11,13 @@ public abstract  class Producto  implements Comparable<Producto>{
 		ATRACCION,PROMOCION
 	}
 	
-	public enum tipoDeAtraccion {
+	public static enum tipoDeAtraccion {
 		AVENTURA, PAISAJE, DEGUSTACION
 	}
 	
 	public String tipoDeAtracciontoString(tipoDeAtraccion tipoAtr) {
 			return tipoAtr.toString() ;
 	}
-	
-	
 	
 	public Producto(tipoDeProducto tipo, tipoDeAtraccion tipoDeAtraccion) {
 		this.tipoDeProducto = tipo;
@@ -32,25 +30,17 @@ public abstract  class Producto  implements Comparable<Producto>{
 		return tipoDeProducto;
 	}
 
-
-
 	public void setTipoDeProducto(tipoDeProducto tipoDeProducto) {
 		this.tipoDeProducto = tipoDeProducto;
 	}
-
-
 
 	public tipoDeAtraccion getTipoDeAtraccion() {
 		return tipoDeAtraccion;
 	}
 
-
-
 	public void setTipoDeAtraccion(tipoDeAtraccion tipoDeAtraccion) {
 		this.tipoDeAtraccion = tipoDeAtraccion;
 	}
-
-
 
 	//Funciones que van a poder usar clases hijas//
 	public int getCupo() {return 0;}
@@ -59,15 +49,10 @@ public abstract  class Producto  implements Comparable<Producto>{
 	
 	public String getNombre() {return null;}
 	
-	public double calcularCosto() {return 0;};
-	
 	public boolean getAtraccionConCupo() {return false;}
 
 	public abstract double getTiempo() ;
-	public int getPrecio() {
-		
-		return 0;
-	}
+	public abstract int getPrecio();
 	
 
 	@Override

@@ -4,72 +4,62 @@ import java.util.List;
 public class Absoluta extends Promocion {
 	
 	ArrayList<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
-	private int costo;
 	protected boolean atraccionConCupo;
 	private double tiempo;
 	private int descuento = 1;
+	private int precio;
 	
-	public Absoluta( tipoDeProducto tipo, 
-			tipoDeAtraccion tipoAtraccion,String nombre, int costo, ArrayList<Atraccion> lista) {
+	public Absoluta( tipoDeProducto tipo, tipoDeAtraccion tipoAtraccion,
+			String nombre, int descuento, ArrayList<Atraccion> lista) {
 		super(tipo, tipoAtraccion,nombre);
-		this.costo = costo;
-		atraccionesContenidas.addAll( lista);
+		this.atraccionesContenidas = lista;
 		this.setTiempo();
 		this.setAtraccionConCupo();
-		
+		this.descuento = descuento;
 	}
 	
-	public void setTiempo() {
+	//-----------------------------------------------------
+		//Cálculo de costo, descuento y precio final
 		
-		for (int i = 0; i < atraccionesContenidas.size(); i++) {
-			this.tiempo += atraccionesContenidas.get(i).getTiempo();
-		}
-		
+	@Override
+	public int getDescuento() {
+		return this.descuento;
 	}
-	
-	public double getTiempo() {
-		return this.tiempo;
-	}
-	
 	
 	@Override
-	public String getNombre() {
-		return nombre;
+	public int calculaPrecioSinDescuento() {
+		int acumulado = 0;
+		for (Atraccion a: this.atraccionesContenidas) {
+			acumulado += a.getPrecio();
+		}
+		return acumulado;
+	}
+	
+	public void setPrecio() {
+		this.precio = calculaPrecioSinDescuento()- this.descuento;
 	}
 	
 	@Override
 	public int getPrecio() {
-		int suma = 0;
-		for (int i = 0; i < atraccionesContenidas.size(); i++) {
-		 suma += atraccionesContenidas.get(i).getPrecio();
+		setPrecio();
+			return this.precio;
 		}
-		costo = suma - 5;
-		return this.costo;
-	}
+		
+	//Ajustes Sobre el array de atracciones 
+	//---------------------------------------------------------------------------
 	
-	public void agregarAtracciones(List<Atraccion> lista) {
-		this.atraccionesContenidas.addAll(lista);
-	}
-	
-	@Override
-	public String toString() {
-		String retorno = this.getNombre() +  " Incluye un descuento de  "+ 
-	this.descuento  + " monedas con un precio final de "+ this.getPrecio()+
-	" monedas de oro, y contiene las atracciones: "
-				+  atraccionesContenidas;
-		return retorno;
+	public ArrayList<Atraccion> getAtraccionesContenidas(){
+		return this.atraccionesContenidas;
 	}
 	
 	@Override
 	public void reducirCupo() {
-		
 		for (int i = 0; i < atraccionesContenidas.size(); i++) {
 			atraccionesContenidas.get(i).reducirCupo();
 		}
-		
 		this.setAtraccionConCupo();
-		
-		}
+	}
+	
 	public void setAtraccionConCupo() {
 		int contador = 0;
 		for (int i=0; i < atraccionesContenidas.size();i++) {
@@ -83,6 +73,35 @@ public class Absoluta extends Promocion {
 		return this.atraccionConCupo;
 	}
 
+	public void agregarAtracciones(List<Atraccion> lista) {
+		this.atraccionesContenidas.addAll(lista);
+	}
+	
+	//Otros getter y setter
+	//------------------------------------------------------------------------------------			  
+		public void setTiempo() {
+			for (int i = 0; i < atraccionesContenidas.size(); i++) {
+				this.tiempo += atraccionesContenidas.get(i).getTiempo();
+			}
+		}
+		
+		public double getTiempo() {
+			return this.tiempo;
+		}
+		
+		@Override
+		public String getNombre() {
+			return nombre;
+		}
+			
+		@Override
+		public String toString() {
+			String retorno = this.getNombre() +  " Incluye un descuento de  "+ 
+		this.descuento  + " monedas, "+ "\n" +" con un precio final de "+ this.getPrecio()+
+		" monedas de oro, y contiene las atracciones: " +"\n" + atraccionesContenidas;
+			return retorno;
+		}
+		
 	@Override
 	public String getTipoDePromocionToString() {
 		// TODO Auto-generated method stub
@@ -95,21 +114,5 @@ public class Absoluta extends Promocion {
 		return null;
 	}
 
-	@Override
-	public int getDescuento() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int calculaPrecio() {
-		
-		int sumaSinDescuento = 0;
-		for(Atraccion a: this.atraccionesContenidas) {
-			sumaSinDescuento =+ a.getPrecio();
-		}
-		return (sumaSinDescuento - this.costo );
-	}
-	
 	
 	}
