@@ -1,13 +1,10 @@
 import static org.junit.Assert.*;
 
+
 import org.junit.Test;
 
 import agencia.Agencia;
-import agencia.Atraccion;
-import agencia.Producto.tipoDeAtraccion;
-import agencia.Producto.tipoDeProducto;
-import dao.AtraccionDAO;
-import dao.DAOFactory;
+
 
 public class AgenciaTest {
 	Agencia SinCulpa = new Agencia();
@@ -26,11 +23,6 @@ public class AgenciaTest {
 		assertEquals("Marcos" , nombrePrimerUsuario);
 	}
 	
-	@Test
-	public void Filtro2Test() {
-		SinCulpa.getListaUsuarios();
-		SinCulpa.filtro2PorAtraccionesPreferidas();
-	}
 	
 	
 	

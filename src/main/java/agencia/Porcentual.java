@@ -7,7 +7,6 @@ public class Porcentual extends Promocion {
 	
 	ArrayList<Atraccion> atraccionesContenidas = new ArrayList<Atraccion>();
 	protected boolean atraccionConCupo;
-	private double reduccionDeLaoferta;
 	private double tiempo;
 	private int descuento;
 	private int precio;
@@ -18,7 +17,6 @@ public class Porcentual extends Promocion {
 		super(tipo, tipoAtraccion,nombre);
 		this.descuento = descuento;
 		this.atraccionesContenidas = lista;
-		this.reduccionDeLaoferta = descuento/100;
 		this.setTiempo();
 		this.setAtraccionConCupo();
 		

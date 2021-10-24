@@ -183,11 +183,12 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 	public int update(Usuario usuario) {
 
 		try {
-			String sql = "UPDATE usuarios SET TipoAtraccion = ?  WHERE nombre = ?";
+			String sql = "UPDATE usuarios SET monedas = ? , tiempo = ? WHERE nombre = ?";
 			Connection conn = ConnectionProvider.getConnection();
 			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, usuario.getPreferencia().toString());
-			statement.setString(2, usuario.getNombre());
+			statement.setInt(1, usuario.getMonedasDeOro());
+			statement.setDouble(2, usuario.getTiempoDisponible());
+			statement.setString(3, usuario.getNombre());
 			int rows = statement.executeUpdate();
 
 			return rows;

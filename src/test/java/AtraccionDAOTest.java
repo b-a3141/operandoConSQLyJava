@@ -82,9 +82,9 @@ public class AtraccionDAOTest {
 		Atraccion comidaMex = new Atraccion(
 				tipoDeProducto.ATRACCION, tipoDeAtraccion.DEGUSTACION, "Medioevo Picante", 9, 70, 0.5);
 		atraccionDAO.insert(comidaMex);
-		comidaMex.setCupoDisponible(80);
+		comidaMex.setCupo(80);
 		atraccionDAO.update(comidaMex);
-		assertEquals(80, comidaMex.getCupoDisponible());
+		assertEquals(80, comidaMex.getCupo());
 	}
 
 	@Test

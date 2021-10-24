@@ -43,7 +43,6 @@ public class AxB extends Promocion {
 		int cantidadDeAtracciones = this.atraccionesContenidas.size();
 		if (this.descuento < cantidadDeAtracciones) {
 			for( int i = 0; i < descuento ; i++) {
-				System.out.println(this.atraccionesContenidas.get(i).getPrecio());
 				this.precio -= this.atraccionesContenidas.get(i).getPrecio();
 			}
 		}

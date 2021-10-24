@@ -21,19 +21,18 @@ public class Atraccion extends Producto {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.cupo = cupo;
+		this.cupoDisponible = cupo;
 		this.tiempoNecesario = tiempoNecesario;
 	}
-	
-	
-	
 	
 	@Override
 	public String toString() {
 		String quienSoy = "";
-		quienSoy += this.tipoDeAtraccion + " " + getNombre() + " " + getPrecio() + " " + getCupo() + " " + getTiempo();
-		return quienSoy;
-		
+		quienSoy += "Tipo de Atracción: " + this.tipoDeAtraccion + ", nombre: " + getNombre() + " \n" 
+		+ "precio: " + getPrecio() + ", cupo: " + getCupo() + ", tiempo requerido: " + getTiempo();
+		return quienSoy;	
 	}
+	
 	//Getters and setters
 	@Override
 	public String getNombre() {
@@ -53,26 +52,6 @@ public class Atraccion extends Producto {
 		this.precio = precio;
 	}
 	
-	
-	public void setCupo(int cupo) {
-		this.cupo = cupo;
-	}
-	
-	
-	@Override
-	public int getCupo() {
-		return cupo;
-	}
-
-	
-
-	public int getCupoDisponible() {
-		return cupoDisponible;
-	}
-
-	public void setCupoDisponible(int cupoDisponible) {
-		this.cupoDisponible = cupoDisponible;
-	}
 
 	@Override
 	public double getTiempo() {
@@ -87,36 +66,45 @@ public class Atraccion extends Producto {
 	public void setTiempoNecesario(double tiempoNecesario) {
 		this.tiempoNecesario = tiempoNecesario;
 	}
+	
+
+	public tipoDeAtraccion getTipoDeAtraccion() {
+		return this.tipoDeAtraccion;
+	}
+
+	//metodos sobre el Cupo
+	
+	public void setCupo(int cupo) {
+		this.cupo = cupo;
+		this.cupoDisponible = cupo;
+	}
+	
 	@Override
-	public boolean getAtraccionConCupo() {
-		return atraccionConCupo;
+	public int getCupo() {
+		return cupo;
+	}
+	
+	@Override
+	public void reducirCupo() {
+		this.cupoDisponible --;
+		comprobarCupo();
 	}
 
 	public void setAtraccionConCupo(boolean atraccionConCupo) {
 		this.atraccionConCupo = atraccionConCupo;
 	}
 
-	public tipoDeAtraccion getTipoDeAtraccion() {
-		return this.tipoDeAtraccion;
+	@Override
+	public boolean getAtraccionConCupo() {
+		return atraccionConCupo;
 	}
 
-	public String getTipoDeAtraccionToString() {
-		return this.tipoDeAtraccion.toString();
+	public int getCupoDisponible() {
+		return cupoDisponible;
 	}
-	//metodos
+
 	public void comprobarCupo() {
 		atraccionConCupo = cupoDisponible > 0;
 	}
-	
-	@Override
-	public void reducirCupo() {
-		setCupoDisponible(getCupoDisponible()-1);
-		comprobarCupo();
-	}
-
-
-
-
-	
 	
 }

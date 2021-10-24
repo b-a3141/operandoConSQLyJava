@@ -159,8 +159,7 @@ public class AtraccionDAOImpl implements AtraccionDAO{
 		} else {
 			tipoAtraccion = tipoDeAtraccion.DEGUSTACION;
 		}
-		
-		
+
 		return new Atraccion(tipoDeProducto.ATRACCION, tipoAtraccion, 
 				resultados.getString(2), resultados.getInt(3), resultados.getInt(4),
 				resultados.getDouble(5));
